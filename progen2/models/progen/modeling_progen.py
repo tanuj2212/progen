@@ -659,6 +659,8 @@ class ProGenForCausalLM(ProGenPreTrainedModel):
             # Flatten the tokens
             loss_fct = CrossEntropyLoss()
             loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
+            perplexity = torch.exp(loss)
+            print(f"Perplexity: {perplexity.item()}")
 
             loss = loss.to(hidden_states.dtype)
 
