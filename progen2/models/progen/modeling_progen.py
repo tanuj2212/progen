@@ -174,7 +174,7 @@ class ProGenAttention(nn.Module):
         if layer_past is not None:
             offset = layer_past[0].shape[-2]
             seq_len += offset
-
+#
 #         if self.rotary_dim is not None:
 #             k_rot = key[:, :, :, : self.rotary_dim]
 #             k_pass = key[:, :, :, self.rotary_dim :]
