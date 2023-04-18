@@ -175,23 +175,23 @@ class ProGenAttention(nn.Module):
             offset = layer_past[0].shape[-2]
             seq_len += offset
 
-        if self.rotary_dim is not None:
-            k_rot = key[:, :, :, : self.rotary_dim]
-            k_pass = key[:, :, :, self.rotary_dim :]
+#         if self.rotary_dim is not None:
+#             k_rot = key[:, :, :, : self.rotary_dim]
+#             k_pass = key[:, :, :, self.rotary_dim :]
 
-            q_rot = query[:, :, :, : self.rotary_dim]
-            q_pass = query[:, :, :, self.rotary_dim :]
+#             q_rot = query[:, :, :, : self.rotary_dim]
+#             q_pass = query[:, :, :, self.rotary_dim :]
 
-            sincos = fixed_pos_embedding(k_rot, 1, seq_len=seq_len)
-            k_rot = apply_rotary_pos_emb(k_rot, sincos, offset=offset)
-            q_rot = apply_rotary_pos_emb(q_rot, sincos, offset=offset)
+#             sincos = fixed_pos_embedding(k_rot, 1, seq_len=seq_len)
+#             k_rot = apply_rotary_pos_emb(k_rot, sincos, offset=offset)
+#             q_rot = apply_rotary_pos_emb(q_rot, sincos, offset=offset)
 
-            key = torch.cat([k_rot, k_pass], dim=-1)
-            query = torch.cat([q_rot, q_pass], dim=-1)
-        else:
-            sincos = fixed_pos_embedding(key, 1, seq_len=seq_len)
-            key = apply_rotary_pos_emb(key, sincos, offset=offset)
-            query = apply_rotary_pos_emb(query, sincos, offset=offset)
+#             key = torch.cat([k_rot, k_pass], dim=-1)
+#             query = torch.cat([q_rot, q_pass], dim=-1)
+#         else:
+#             sincos = fixed_pos_embedding(key, 1, seq_len=seq_len)
+#             key = apply_rotary_pos_emb(key, sincos, offset=offset)
+#             query = apply_rotary_pos_emb(query, sincos, offset=offset)
 
         key = key.permute(0, 2, 1, 3)
         query = query.permute(0, 2, 1, 3)
