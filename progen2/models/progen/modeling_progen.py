@@ -42,16 +42,16 @@ def fixed_pos_embedding(x, seq_dim=1, seq_len=None):
     inv_freq = 1.0 / (10000 ** (torch.arange(0, dim, 2) / dim))
     sinusoid_inp = torch.einsum("i , j -> i j", torch.arange(seq_len), inv_freq).to(x.device).float()
     return torch.sin(sinusoid_inp), torch.cos(sinusoid_inp)
+##### 
 
-
-def rotate_every_two(x):
+def rotate_every_two(x):   #### function to define rotation of matrix x, which will be used in the rotatory positional embeddings. 
     x1 = x[:, :, :, ::2]
     x2 = x[:, :, :, 1::2]
     x = torch.stack((-x2, x1), axis=-1)
     return x.flatten(-2)  # in einsum notation: rearrange(x, '... d j -> ... (d j)')
 
 
-def apply_rotary_pos_emb(x, sincos, offset=0):
+def apply_rotary_pos_emb(x, sincos, offset=0):   #### function for the rotatory positional embeddings. 
     sin, cos = map(lambda t: t[None, offset : x.shape[1] + offset, None, :].repeat_interleave(2, 3), sincos)
     # einsum notation for lambda t: repeat(t[offset:x.shape[1]+offset,:], "n d -> () n () (d j)", j=2)
     return (x * cos) + (rotate_every_two(x) * sin)
@@ -174,7 +174,7 @@ class ProGenAttention(nn.Module):
         if layer_past is not None:
             offset = layer_past[0].shape[-2]
             seq_len += offset
-#
+# This is the condition use for rotatory positional embeddings, so we can use both positional and rotatory positional embeddings
 #         if self.rotary_dim is not None:
 #             k_rot = key[:, :, :, : self.rotary_dim]
 #             k_pass = key[:, :, :, self.rotary_dim :]
@@ -650,7 +650,7 @@ class ProGenForCausalLM(ProGenPreTrainedModel):
         # compute loss in fp32 to match with mesh-tf version
         # https://github.com/EleutherAI/gpt-neo/blob/89ce74164da2fb16179106f54e2269b5da8db333/models/gpt2/gpt2.py#L179
         lm_logits = self.lm_head(hidden_states).to(torch.float32)
-
+############ in the code loss is calculated and I have added log_likelihood and perplexity to the function and which wil tell us the how training is going on. 
         loss = None
         if labels is not None:
             # Shift so that tokens < n predict n
