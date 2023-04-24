@@ -31,7 +31,6 @@
       "normalized": false
     }
   ], 
- ## """This pre-tokenizer splits the input into individual bytes and then applies various heuristics to group the bytes into tokens. """
   "normalizer": null,
   "pre_tokenizer": {          #
     "type": "ByteLevel",
@@ -51,7 +50,7 @@
   "model": {
     "type": "BPE",
     "dropout": null,
-    "unk_token": null,        # token #for #out #of #vocabulary #words
+    "unk_token": null,      
     "continuing_subword_prefix": null,
     "end_of_word_suffix": null,
     "fuse_unk": false,
